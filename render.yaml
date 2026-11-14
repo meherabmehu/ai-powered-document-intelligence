@@ -1,0 +1,49 @@
+services:
+  - type: web
+    name: ai-powered-document-intelligence
+    runtime: docker
+    plan: starter
+    region: singapore
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    disk:
+      name: uploads
+      mountPath: /app/uploads
+      sizeGB: 10
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: UPLOAD_DIR
+        value: /app/uploads
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ai-document-intelligence-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: ai-document-intelligence-redis
+          type: keyvalue
+          property: connectionString
+      - key: LLM_API_BASE_URL
+        value: https://api.groq.com/openai/v1
+      - key: LLM_API_KEY
+        sync: false
+      - key: LLM_MODEL
+        value: openai/gpt-oss-20b
+
+  - type: keyvalue
+    name: ai-document-intelligence-redis
+    plan: free
+    region: singapore
+    ipAllowList:
+      - source: 0.0.0.0/0
+        description: Render service connectivity
+    maxmemoryPolicy: noeviction
+    persistenceMode: off
+
+databases:
+  - name: ai-document-intelligence-db
+    databaseName: document_intelligence
+    plan: basic_256mb
+    region: singapore

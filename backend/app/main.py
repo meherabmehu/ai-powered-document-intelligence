@@ -3,6 +3,8 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from pathlib import Path
 
 from app.api import router
 from app.config import get_settings
@@ -28,6 +30,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.include_router(router)
+
+# In the Render container, serve the compiled React app from the same origin as
+# the API so browser requests stay same-origin and uploads share the worker's disk.
+frontend_dist = Path(__file__).resolve().parents[2] / "frontend" / "dist"
+if frontend_dist.is_dir():
+    app.mount("/", StaticFiles(directory=frontend_dist, html=True), name="frontend")
 
 
 @app.get("/health", tags=["health"])
