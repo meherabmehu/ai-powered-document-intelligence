@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -eu
 
 celery -A app.queue:celery_app worker --loglevel=INFO &

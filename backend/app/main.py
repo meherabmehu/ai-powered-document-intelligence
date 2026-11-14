@@ -31,13 +31,13 @@ app.add_middleware(
 )
 app.include_router(router)
 
+@app.get("/health", tags=["health"])
+def health() -> dict[str, str]:
+    return {"status": "ok"}
+
+
 # In the Render container, serve the compiled React app from the same origin as
 # the API so browser requests stay same-origin and uploads share the worker's disk.
 frontend_dist = Path(__file__).resolve().parents[2] / "frontend" / "dist"
 if frontend_dist.is_dir():
     app.mount("/", StaticFiles(directory=frontend_dist, html=True), name="frontend")
-
-
-@app.get("/health", tags=["health"])
-def health() -> dict[str, str]:
-    return {"status": "ok"}

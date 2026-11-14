@@ -36,9 +36,7 @@ services:
     name: ai-document-intelligence-redis
     plan: free
     region: singapore
-    ipAllowList:
-      - source: 0.0.0.0/0
-        description: Render service connectivity
+    ipAllowList: []
     maxmemoryPolicy: noeviction
     persistenceMode: off
 
