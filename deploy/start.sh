@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eu
 
-celery -A app.queue:celery_app worker --loglevel=INFO &
+celery -A app.queue:celery_app worker --pool=solo --concurrency=1 --loglevel=INFO &
 worker_pid=$!
 uvicorn app.main:app --host 0.0.0.0 --port "${PORT:-10000}" &
 api_pid=$!
