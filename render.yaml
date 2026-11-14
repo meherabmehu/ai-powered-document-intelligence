@@ -2,15 +2,11 @@ services:
   - type: web
     name: ai-powered-document-intelligence
     runtime: docker
-    plan: starter
+    plan: free
     region: singapore
     dockerfilePath: ./Dockerfile
     dockerContext: .
     healthCheckPath: /health
-    disk:
-      name: uploads
-      mountPath: /app/uploads
-      sizeGB: 10
     envVars:
       - key: APP_ENV
         value: production
@@ -43,5 +39,5 @@ services:
 databases:
   - name: ai-document-intelligence-db
     databaseName: document_intelligence
-    plan: basic_256mb
+    plan: free
     region: singapore
